@@ -2,32 +2,36 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
-}
-
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  background: #ffffffdd;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+.banner-bg {
+  background: radial-gradient(
+        circle,
+        transparent 20%,
+        rgba(252, 255, 219, 0.71) 20%,
+        rgba(252, 255, 219, 0.71) 80%,
+        transparent 80%,
+        transparent
+      )
+      0% 0% / 114px 114px,
+    radial-gradient(
+        circle,
+        transparent 20%,
+        rgba(252, 255, 219, 0.71) 20%,
+        rgba(252, 255, 219, 0.71) 80%,
+        transparent 80%,
+        transparent
+      )
+      57px 57px / 114px 114px,
+    linear-gradient(rgba(255, 226, 189, 0.4) 2.5px, transparent 2.5px) 0px -1.25px /
+      57px 57px,
+    linear-gradient(
+        90deg,
+        rgba(255, 226, 189, 0.4) 2.5px,
+        rgba(252, 255, 219, 0.71) 2.5px
+      ) -1.25px 0px / 57px 57px rgba(252, 255, 219, 0.71);
+  background-size: 114px 114px, 114px 114px, 57px 57px, 57px 57px;
+  background-color: rgba(252, 255, 219, 0.71);
 }
