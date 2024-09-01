@@ -26,7 +26,7 @@ export default function Navbar() {
         router.push("/");
       }
     } catch (error: any) {
-      toast.error(error.response.data.message);
+      // toast.error(error.response.data.message);
     }
     setLoading(false);
   };
@@ -39,7 +39,14 @@ export default function Navbar() {
     <nav className="w-full bg-gradient-to-b from-white to-orange-300 border-b border-black px-4 py-3">
       <div className="container mx-auto flex justify-between items-center">
         <Link href={"/"}>
-          <Image src={"/logo.png"} width={150} height={150} alt="logo" />
+          <Image
+            src={
+              "https://firebasestorage.googleapis.com/v0/b/plypicker-assignment-6142d.appspot.com/o/images%2Flogo.png?alt=media&token=a6d631b2-e8a1-4f6e-bbd1-c2202ae1b2c7"
+            }
+            width={150}
+            height={150}
+            alt="logo"
+          />
         </Link>
 
         {/* Hamburger Menu Button */}

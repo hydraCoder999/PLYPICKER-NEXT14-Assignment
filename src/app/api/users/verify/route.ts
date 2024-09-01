@@ -1,23 +1,26 @@
 import UserModel from "@/models/user.model";
 import { NextRequest, NextResponse } from "next/server";
 import JWT from "jsonwebtoken";
+import ConnctDB from "@/utils/dbConnect";
 export async function GET(request: NextRequest): Promise<NextResponse> {
+  // const { searchParams } = new URL(request.url);
+  // console.log(searchParams);
+
+  // const token = searchParams.get("token");
+
+  const searchParams = request.nextUrl.searchParams;
+  const token = searchParams.get("token");
   try {
-    const { searchParams } = new URL(request.url);
-    console.log(searchParams);
-
-    const token = searchParams.get("token");
-
     if (!token) {
       return NextResponse.json(
         { message: "Token is required" },
         { status: 400 }
       );
     }
-
+    await ConnctDB();
     const user = await UserModel.findOne({
       verifyUserToken: token,
-      verifyUserExpired: { $gt: new Date() }, // Check if token is still valid
+      verifyUserExpired: { $gt: new Date() },
     });
 
     if (!user) {
@@ -45,10 +48,17 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     );
 
     //set Cookies
-    response.cookies.set("authtoken", authtoken, {
-      expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours Expiry
-    });
+    // response.cookies.set("authtoken", authtoken, {
+    //   expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours Expiry
+    // });
 
+    response.cookies.set("authtoken", authtoken, {
+      path: "/",
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+      sameSite: "strict", // CSRF protection
+      expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24-hour expiry
+    });
     return response;
   } catch (error) {
     console.error("Error verifying token:", error);

@@ -1,7 +1,9 @@
+"use client";
+import { useEffect, useState } from "react";
+import axios from "axios";
 import Banner from "@/Components/Banner";
 import ProductCard from "@/Components/ProductCard";
-import { httpAxios } from "@/utils/Axioshelper";
-import React from "react";
+import Pagination from "@/Components/Pagination";
 
 interface Product {
   _id: string;
@@ -12,42 +14,72 @@ interface Product {
   department: string;
   id: string;
 }
-
-async function fetchProducts(): Promise<Product[]> {
-  try {
-    const res = await httpAxios.get("/api/products", {});
-    const products = res.data.products;
-
-    return products;
-  } catch (error: any) {
-    console.error("Error fetching data:", error);
-
-    return [];
-  }
+interface ApiResponse {
+  products: Product[];
+  totalPages: number;
+  currentPage: number;
 }
+const ITEMS_PER_PAGE = 20;
 
-export default async function Page() {
-  const products = await fetchProducts();
+const fetchProducts = async (page: number): Promise<ApiResponse> => {
+  try {
+    const res = await axios.get<ApiResponse>(
+      `/api/products?page=${page}&limit=${ITEMS_PER_PAGE}`
+    );
+    return res.data;
+  } catch (error: any) {
+    console.error("Error fetching data:", error.message);
+    return {
+      products: [],
+      totalPages: 1,
+      currentPage: 1,
+    };
+  }
+};
+
+export default function Page() {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
+  useEffect(() => {
+    const loadProducts = async () => {
+      const data = await fetchProducts(currentPage);
+      setProducts(data.products);
+      setTotalPages(data.totalPages);
+    };
+
+    loadProducts();
+  }, [currentPage]);
+
   return (
     <div className="w-full min-h-screen">
-      <Banner heading="DashBoard" path="dashboard" />
+      <Banner heading="Dashboard" path="dashboard" />
 
-      {/* Render the list of products */}
       <div className="p-4 flex flex-wrap items-center justify-center gap-5">
-        {products &&
-          products?.map((product) => (
-            <ProductCard
-              key={product._id}
-              _id={product._id}
-              id={product.id}
-              productName={product.productName}
-              price={product.price}
-              image={product.image}
-              productDescription={product.productDescription}
-              department={product.department}
-            />
-          ))}
+        {products.map((product) => (
+          <ProductCard
+            key={product._id}
+            _id={product._id}
+            id={product.id}
+            productName={product.productName}
+            price={product.price}
+            image={product.image}
+            productDescription={product.productDescription}
+            department={product.department}
+          />
+        ))}
       </div>
+
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={(page) => {
+          if (page > 0 && page <= totalPages) {
+            setCurrentPage(page);
+          }
+        }}
+      />
     </div>
   );
 }

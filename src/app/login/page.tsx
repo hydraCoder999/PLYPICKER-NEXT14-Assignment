@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 
 export default function Page() {
   const { setUser } = useContext(UserContext);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -40,6 +41,7 @@ export default function Page() {
     setErrors(newErrors);
 
     if (valid) {
+      setLoading(true);
       try {
         const response = await httpAxios.post("/api/users/login", {
           email,
@@ -58,6 +60,7 @@ export default function Page() {
     } else {
       toast.error("Please fill in all required fields");
     }
+    setLoading(false);
   };
 
   return (
@@ -112,10 +115,11 @@ export default function Page() {
           {/* Submit Button */}
           <div>
             <button
+              disabled={loading}
               type="submit"
               className="w-full px-4 py-2 text-white bg-black rounded-md hover:bg-orange-600 focus:outline-none focus:bg-orange-600"
             >
-              Login
+              {loading ? "Loading..." : "Login"}
             </button>
           </div>
         </form>

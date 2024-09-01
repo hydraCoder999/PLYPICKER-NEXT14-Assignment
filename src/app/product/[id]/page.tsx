@@ -28,27 +28,31 @@ export default function Page() {
   const [initialProductData, setInitialProductData] =
     useState<ProductProps>(productData);
 
-  if (!user) {
-    router.push("/");
-    return null;
-  }
+  useEffect(() => {
+    if (!user) {
+      router.push("/");
+      return;
+    }
+
+    const fetchProduct = async () => {
+      try {
+        const response = await httpAxios(`/api/products/${id}`);
+        setProductData(response.data.productData);
+        setInitialProductData(response.data.productData);
+      } catch (error) {
+        toast.error("Product Not Found");
+        router.push("/");
+      }
+    };
+
+    fetchProduct();
+  }, [id, router, user]);
 
   const handleImageUpload = (url: string) => {
     setProductData((prevData) => ({
       ...prevData,
       image: url,
     }));
-  };
-
-  const fetchProduct = async () => {
-    try {
-      const response = await httpAxios(`/api/products/${id}`);
-      setProductData(response.data.productData);
-      setInitialProductData(response.data.productData);
-    } catch (error) {
-      toast.error("Product Not Found");
-      router.push("/");
-    }
   };
 
   const handleInputChange = (
@@ -77,7 +81,7 @@ export default function Page() {
   const handleSaveData = async () => {
     try {
       setLoading(true);
-      if (user.role === USER_TYPES.ADMIN) {
+      if (user && user.role === USER_TYPES.ADMIN) {
         const response = await httpAxios.put(
           `/api/products/submissions/admin`,
           productData
@@ -87,7 +91,7 @@ export default function Page() {
         toast.success(response.data.message);
         setProductData(response.data.product);
         setInitialProductData(response.data.product);
-      } else if (user.role === USER_TYPES.TEAM_MEMBER) {
+      } else if (user && user.role === USER_TYPES.TEAM_MEMBER) {
         const response = await httpAxios.post(
           `/api/products/submissions/teammember`,
           productData
@@ -102,10 +106,6 @@ export default function Page() {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    fetchProduct();
-  }, []);
 
   return (
     <div className="w-full min-h-screen">

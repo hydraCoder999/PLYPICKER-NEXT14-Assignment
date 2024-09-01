@@ -3,11 +3,14 @@ import UserModel from "@/models/user.model";
 import ConnctDB from "@/utils/dbConnect";
 import { USER_TYPES } from "@/utils/types";
 import { VerifyToken } from "@/utils/VerifyToken";
+import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
+  const cookieStore = cookies();
+  const token = cookieStore.get("authtoken")?.value;
   try {
-    const token = request.cookies.get("authtoken")?.value;
+    // const token = await request.cookies.get("authtoken")?.value;
 
     const { valid, decoded, message } = await VerifyToken(token);
 

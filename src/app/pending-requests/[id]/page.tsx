@@ -5,13 +5,14 @@ import { UserContext } from "@/Context/UserContext";
 import { SUBMISSION_STATUS } from "@/models/reviews.model";
 import { httpAxios } from "@/utils/Axioshelper";
 import { USER_TYPES, UserInterface, PendingReview } from "@/utils/types";
+import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import React, { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-export default function page() {
+export default function Page() {
   const { id } = useParams();
   const [loading, setLoading] = useState(true);
   const [dataSubmissionloading, setDataSubmissionloading] = useState(false);
@@ -80,7 +81,7 @@ export default function page() {
 
   useEffect(() => {
     fecthTheReview();
-  }, []);
+  }, [id]);
 
   if (loading) {
     return <Loading />;

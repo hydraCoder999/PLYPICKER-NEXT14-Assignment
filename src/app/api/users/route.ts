@@ -61,7 +61,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     });
 
     // Send verification email
-    const verificationUrl = `${process.env.BASE_URL}/verify?token=${token}`;
+    const verificationUrl = `${process.env.BASE_URL}/verify/${token}`;
 
     const emailSubject = "Your verification link for authentication";
     const emailHtml = VERIFY_EMAIL_TEMPLATE(

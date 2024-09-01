@@ -3,11 +3,14 @@ import ReviewModel, { SUBMISSION_STATUS } from "@/models/reviews.model";
 import UserModel from "@/models/user.model";
 import ConnctDB from "@/utils/dbConnect";
 import { VerifyToken } from "@/utils/VerifyToken";
+import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
+  const cookieStore = cookies();
+  const token = cookieStore.get("authtoken")?.value;
   try {
-    const token = request.cookies.get("authtoken")?.value;
+    // const token = request.cookies.get("authtoken")?.value;
 
     // Verify the token
     const { valid, decoded, message } = await VerifyToken(token);
