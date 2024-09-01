@@ -7,7 +7,7 @@ export default function middleware(req: NextRequest): NextResponse {
   res.headers.set('Access-Control-Allow-Origin', '*');
   res.headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.headers.set('Access-Control-Allow-Headers', 'Content-Type');
-  res.headers.set('Access-Control-Max-Age', '86400');
+
 
   console.log(`Request path: ${pathname}`);
    if (pathname.startsWith("/_next")) {
