@@ -11,9 +11,6 @@ export default function middleware(req: NextRequest): NextResponse {
 
   console.log(`Request path: ${pathname}`);
 
-  if (pathname.startsWith("/_next")) {
-    return NextResponse.next();
-  }
 
   const publicRoutes = ["/login", "/signup", "/", "/verify", /^\/verify\/.+/];
 
