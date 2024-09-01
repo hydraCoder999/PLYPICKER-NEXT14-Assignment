@@ -10,7 +10,9 @@ export default function middleware(req: NextRequest): NextResponse {
   res.headers.set('Access-Control-Max-Age', '86400');
 
   console.log(`Request path: ${pathname}`);
-
+   if (pathname.startsWith("/_next")) {
+    return NextResponse.next();
+  }
 
   const publicRoutes = ["/login", "/signup", "/", "/verify", /^\/verify\/.+/];
 
