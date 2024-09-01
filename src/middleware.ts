@@ -3,6 +3,11 @@ import { NextResponse, type NextRequest } from "next/server";
 export default function middleware(req: NextRequest): NextResponse {
   const token = req.cookies.get("authtoken");
   const { pathname } = req.nextUrl;
+  const res = NextResponse.next();
+  res.headers.set('Access-Control-Allow-Origin', '*');
+  res.headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.headers.set('Access-Control-Allow-Headers', 'Content-Type');
+  res.headers.set('Access-Control-Max-Age', '86400');
 
   console.log(`Request path: ${pathname}`);
 
